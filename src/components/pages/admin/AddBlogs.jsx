@@ -62,7 +62,7 @@ const addBlogs = () => {
           placeholder="subtitle "
           required
           className="w-full max-w-large mt-2 p-2 border border-gray-300 outline-none rounded"
-          onChange={(e) => setTitle(e.target.value)}
+          onChange={(e) => setsubTitle(e.target.value)}
           value={subTitle}
         />
         <p className="mt-4">Blog Description </p>
