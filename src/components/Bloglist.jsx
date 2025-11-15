@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { blog_data, blogCategories } from "../assets/assets";
-import { motion } from "framer-motion"; // Corrected import
+import { motion } from "framer-motion";
 import Blogcard from "./Blogcard";
 
 const Bloglist = () => {
