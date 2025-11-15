@@ -152,8 +152,6 @@ const Blog = () => {
           </div>
         </div>
       </div>{" "}
-      {/* <-- This closes the 'mx-auto max-w-5xl my-10' div */}
-      {/* FOOTER IS NOW PLACED HERE, OUTSIDE THE MAIN CONTENT CONTAINER */}
       <Footer />
     </div>
   );
