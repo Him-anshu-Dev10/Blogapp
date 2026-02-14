@@ -1,19 +1,29 @@
 import React, { useState, useEffect } from "react";
-// Adjust paths as needed based on your actual file structure
-import { assets, dashboard_data } from "../../../assets/assets";
+import { assets } from "../../../assets/assets";
 import BlogTableItem from "../../admins/BlogTableItem";
+import { useAppContext } from "../../../context/appContext";
+import toast from "react-hot-toast";
 
 const Dashboard = () => {
+  const { axios } = useAppContext();
   const [dashboard, setDashboardData] = useState({
     blogs: 0,
-    comments: 0,
+    totalComments: 0,
     drafts: 0,
-    recentBlogs: [], // Keep it as recentBlogs (plural) to match your assets.js
+    recentBlogs: [],
   });
 
-  const fetchDashboardData = () => {
-    // This will now correctly pick up 'recentBlogs' from your assets.js
-    setDashboardData(dashboard_data);
+  const fetchDashboardData = async () => {
+    try {
+      const { data } = await axios.get("/api/admin/dashboard-stats");
+      if (data.success) {
+        setDashboardData(data.dashboardStats);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error("Failed to fetch dashboard data");
+    }
   };
 
   useEffect(() => {
@@ -45,7 +55,7 @@ const Dashboard = () => {
             className="w-12 h-12"
           />
           <div>
-            <p className="text-2xl font-semibold">{dashboard.comments}</p>
+            <p className="text-2xl font-semibold">{dashboard.totalComments}</p>
             <p className="text-gray-400 font-light">Comments</p>
           </div>
         </div>

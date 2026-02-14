@@ -1,23 +1,20 @@
 import React from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { assets } from "../../../assets/assets";
 import Sidebar from "../../admins/Sidebar";
+import { useAppContext } from "../../../context/appContext";
 
 const Layout = () => {
-  const navigate = useNavigate();
-  const logout = () => {
-    navigate("/");
-  };
+  const { navigate, logout } = useAppContext();
+
   return (
     <>
-      <div className="flex items-center justify-between py-2 h-[70px]  sm:px-12 border-b border-gray-200  ">
+      <div className="flex items-center justify-between py-2 h-[70px] sm:px-12 border-b border-gray-200">
         <img
           src={assets.logo}
           alt=""
           className="w-32 sm:w-40 cursor-pointer"
-          onClick={() => {
-            navigate("/");
-          }}
+          onClick={() => navigate("/")}
         />
         <button
           onClick={logout}
@@ -25,7 +22,6 @@ const Layout = () => {
         >
           Logout
         </button>
-        {/* //navigate the uesr tho homepage */}
       </div>
       <div className="flex h-[calc(100vh-70px)]">
         <Sidebar />

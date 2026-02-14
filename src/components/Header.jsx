@@ -1,7 +1,19 @@
 import React from "react";
 import { assets } from "../assets/assets";
-
+import { useAppContext } from "../context/appContext";
 const Header = () => {
+  const { setInput, input } = useAppContext();
+  const inputRef = React.useRef();
+
+  const submitHandler = (e) => {
+    e.preventDefault();
+    setInput(inputRef.current.value);
+  };
+
+  const onclear = () => {
+    setInput("");
+    inputRef.current.value = "";
+  };
   return (
     <div className="mx-8 sm:mx-16 xl:mx-24 relative">
       <div className="text-center mt-20 mb-8">
@@ -21,10 +33,12 @@ const Header = () => {
           right here.{" "}
         </p>
         <form
+          onSubmit={submitHandler}
           action=""
           className="flex items-center w-full max-w-lg sm:max-w-lg mx-auto border border-gray-300 bg-white rounded-full overflow-hidden p-1"
         >
           <input
+            ref={inputRef}
             type="text"
             placeholder="Search for Blogs "
             required
@@ -37,6 +51,16 @@ const Header = () => {
             Search
           </button>
         </form>
+      </div>
+      <div className="text-center ">
+        {input && (
+          <button
+            onClick={onclear}
+            className="border font-light text-xs py-1  px-3 rounded-sm shadow-custom-sm cursor-pointer "
+          >
+            clear Search
+          </button>
+        )}
       </div>
 
       <img

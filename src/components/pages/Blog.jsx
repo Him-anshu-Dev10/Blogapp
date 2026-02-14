@@ -1,49 +1,72 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Navbar from "../Navbar";
-
+import { useAppContext } from "../../context/appContext";
 import { assets, blog_data, comments_data } from "../../assets/assets";
 import moment from "moment";
 import Footer from "../Footer"; // Correct import path
 import Loader from "./Loader";
+import toast from "react-hot-toast";
 
 const Blog = () => {
   const { id } = useParams();
+  const { axios } = useAppContext();
   const [data, setData] = useState(null);
   const [comments, setComments] = useState([]);
   const [commentName, setCommentName] = useState("");
   const [commentContent, setCommentContent] = useState("");
 
-  const fetchBlogData = () => {
-    const foundBlog = blog_data.find((item) => item._id === id);
-    setData(foundBlog);
+  const fetchBlogData = async () => {
+    try {
+      const { data } = await axios.get(`/api/blog/${id}`);
+      if (data.success) setData(data.blog);
+      else toast.error("Failed to load blog data");
+    } catch (error) {
+      console.error("Failed to fetch blog data");
+    }
   };
 
   const fetchComments = async () => {
-    setComments(comments_data);
+    try {
+      const { data } = await axios.get(`/api/blog/${id}/comments`);
+      if (data.success) setComments(data.comments);
+      else toast.error("Failed to load comments");
+    } catch (error) {
+      console.error("Failed to fetch comments");
+    }
   };
 
   const addComment = async (e) => {
     e.preventDefault(); // Prevents page reload
+    try {
+      const { data } = await axios.post(`/api/blog/add-comment`, {
+        blogId: id,
+        name: commentName.trim(),
+        content: commentContent.trim(),
+      });
+      if (data.success) {
+        toast.success("Comment added successfully");
 
-    if (!commentName.trim() || !commentContent.trim()) {
-      alert("Please enter both your name and comment.");
-      return;
+        // Add the new comment to the local state
+        const newComment = {
+          name: commentName.trim(),
+          content: commentContent.trim(),
+          createdAt: new Date().toISOString(),
+          _id: Date.now().toString(),
+        };
+
+        setComments((prevComments) => [...prevComments, newComment]);
+
+        // Clear the form
+        setCommentName("");
+        setCommentContent("");
+      } else {
+        toast.error("Failed to add comment");
+      }
+    } catch (error) {
+      console.error("Failed to submit comment");
+      toast.error("Failed to submit comment");
     }
-
-    const newComment = {
-      name: commentName.trim(),
-      content: commentContent.trim(),
-      createdAt: new Date().toISOString(),
-      _id: Date.now().toString(),
-    };
-
-    console.log("New Comment Submitted:", newComment);
-    setComments((prevComments) => [...prevComments, newComment]);
-
-    // Clear the form
-    setCommentName("");
-    setCommentContent("");
   };
 
   useEffect(() => {

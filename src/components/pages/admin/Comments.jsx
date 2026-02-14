@@ -1,16 +1,24 @@
 import React, { useEffect, useState } from "react";
-// Corrected path to assets.js based on your provided fi le location
-import { comments_data } from "../../../assets/assets";
 import CommentTableItem from "../../admins/CommentTableItem";
+import { useAppContext } from "../../../context/appContext";
+import toast from "react-hot-toast";
 
 const Comments = () => {
+  const { axios } = useAppContext();
   const [comments, setComments] = useState([]);
-  // Initial filter state set to "Not Approved"
   const [filter, setFilter] = useState("Not Approved");
 
-  // Fetches comments data (currently from local assets.js)
   const fetchComments = async () => {
-    setComments(comments_data);
+    try {
+      const { data } = await axios.get("/api/admin/comments");
+      if (data.success) {
+        setComments(data.comments);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error("Failed to fetch comments");
+    }
   };
 
   useEffect(() => {
