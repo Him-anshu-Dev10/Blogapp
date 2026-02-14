@@ -8,6 +8,8 @@ import Comments from "./components/pages/admin/Comments";
 import AddBlogs from "./components/pages/admin/AddBlogs";
 import ListBlogs from "./components/pages/admin/ListBlogs";
 import Login from "./components/admins/Login";
+import ForgotPassword from "./components/pages/ForgotPassword";
+import ResetPassword from "./components/pages/ResetPassword";
 import { Toaster } from "react-hot-toast";
 import { useAppContext } from "./context/appContext";
 
@@ -31,6 +33,8 @@ const App = () => {
           path="/login"
           element={token ? <Navigate to="/admin" replace /> : <Login />}
         />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
 
         <Route
           path="/admin"

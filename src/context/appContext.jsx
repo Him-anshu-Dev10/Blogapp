@@ -22,28 +22,6 @@ export const AppProvider = ({ children }) => {
   };
   useEffect(() => {
     fetchBlogs();
-    const storedToken = localStorage.getItem("token");
-    if (storedToken) {
-      // Verify token is still valid by making an authenticated request
-      axios.defaults.headers.common["Authorization"] = storedToken;
-      axios
-        .get("/api/admin/dashboard-stats")
-        .then(({ data }) => {
-          if (data.success) {
-            setToken(storedToken);
-          } else {
-            localStorage.removeItem("token");
-            delete axios.defaults.headers.common["Authorization"];
-            setToken(null);
-          }
-        })
-        .catch(() => {
-          // Token is invalid or expired — clear it
-          localStorage.removeItem("token");
-          delete axios.defaults.headers.common["Authorization"];
-          setToken(null);
-        });
-    }
   }, []);
   const logout = () => {
     localStorage.removeItem("token");
